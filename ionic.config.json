@@ -1,5 +1,7 @@
 {
   "name": "rapid",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
