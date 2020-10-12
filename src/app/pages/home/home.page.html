@@ -1,7 +1,13 @@
 <ion-content>
 
   <div #map>
-    <ion-searchbar placeholder="Onde deseja entregar?"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="search" (ionChange)="searchChange()" placeholder="Onde deseja entregar?">
+    </ion-searchbar>
+    <ion-list class="ion-margin-horizontal">
+      <ion-item (click)="calRoutes(result)" *ngFor="let result of searchResults; index as i">
+        {{result.description}}
+      </ion-item>
+    </ion-list>
   </div>
 
 </ion-content>
