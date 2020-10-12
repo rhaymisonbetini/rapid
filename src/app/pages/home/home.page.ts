@@ -1,5 +1,6 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { Environment, GoogleMap, GoogleMapOptions, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, MyLocation } from '@ionic-native/google-maps';
+import { async } from '@angular/core/testing';
+import { Environment, Geocoder, GoogleMap, GoogleMapOptions, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, ILatLng, Marker, MyLocation } from '@ionic-native/google-maps';
 import { LoadingController, Platform } from '@ionic/angular';
 
 declare var google: any;
@@ -19,8 +20,12 @@ export class HomePage implements OnInit {
   public search: string = '';
 
   private googleAutoComplete = new google.maps.places.AutocompleteService();
+  private googleDireactionService = new google.maps.DirectionsService();
 
   public searchResults: Array<any>;
+
+  private originMarker: Marker;
+  public destination: any;
 
   constructor(
     private platform: Platform,
@@ -77,7 +82,7 @@ export class HomePage implements OnInit {
         zoom: 18
       })
 
-      this.map.addMarkerSync({
+      this.originMarker = this.map.addMarkerSync({
         title: "Origem",
         icon: '#FF4500',
         animation: GoogleMapsAnimation.DROP,
@@ -90,7 +95,6 @@ export class HomePage implements OnInit {
       this.loading.dismiss();
     });
   }
-
 
 
   //metodos auxiliares
@@ -109,9 +113,47 @@ export class HomePage implements OnInit {
     }
   }
 
-  calRoutes(result) {
+  async calRoutes(result: any) {
     this.searchResults = [];
+    this.destination = result;
 
+    const info: any = await Geocoder.geocode({
+      address: this.destination.description
+    })
+
+    let markDestionation: Marker = this.map.addMarkerSync({
+      title: this.destination.description,
+      icon: '#000',
+      animation: GoogleMapsAnimation.DROP,
+      position: info[0].position
+    });
+
+
+    this.googleDireactionService.route({
+      origin: this.originMarker.getPosition(),
+      destination: markDestionation.getPosition(),
+      travelMode: 'DRIVING'
+    }, async result => {
+
+      const points = new Array<ILatLng>();
+      const routes = result.routes[0].overview_path;
+
+      for (let i = 0; i < routes.length; i++) {
+        points[i] = {
+          lat: routes[i].lat(),
+          lng: routes[i].lng()
+        }
+      }
+
+      await this.map.addPolyline({
+        points: points,
+        color: '#FF4500',
+        width: 3
+      });
+
+      this.map.moveCamera({target:points})
+
+    })
 
   }
 
