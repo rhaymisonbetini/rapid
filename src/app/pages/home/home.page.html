@@ -10,7 +10,12 @@
       Voltar
     </ion-button>
 
-    <ion-list class="ion-margin-horizontal">
+    <ion-button [hidden]="!cancel" size="small" class="ion-margin-horizontal" (click)="cancelDelivery()">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+      Cancelar
+    </ion-button>
+
+    <ion-list class="ion-margin-horizontal" *ngIf="searchResults && searchResults.length > 0">
       <ion-item (click)="calRoutes(result)" *ngFor="let result of searchResults; index as i">
         {{result.description}}
       </ion-item>
@@ -18,11 +23,11 @@
   </div>
 
 
-  <div class="request ion-padding ion-text-center" [hidden]="!destination || selectedDelivery">
+  <div id="delivery" class="request ion-padding ion-text-center" [hidden]="!findDelivery || selectedDelivery">
     <h4 class="ion-no-margin">Rapid</h4>
     <span>Sua melhor opção de entregas</span>
 
-    <ion-grid class="ion-margin-vertical">
+    <ion-grid class="ion-margin-vertical" *ngIf="!showDeliver">
       <ion-row>
         <ion-col size="4" (click)="getDelivery()">
           <img src="../../../assets/3003700.svg">
@@ -41,6 +46,17 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+
+    <ion-grid *ngIf="showDeliver">
+      <ion-row>
+        <ion-col>
+          <img src="../../../assets/img/images.jpeg" alt="">
+          <h4>Juga Tigre</h4>
+          <h5>Chegara em: 2 minutos</h5>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
     <ion-button color="dark" expand="block" (click)="confirmDelivery()">
       Confirmar Entrega
     </ion-button>

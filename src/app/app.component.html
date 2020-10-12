@@ -1,28 +1,40 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" [hidden]="logouter">
+
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi@ionicframework.com</ion-note>
+        <div class="menu-header-bg">
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
-              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
+        </div>
 
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
+        <div class="header-content">
+          <img src="../assets/img/avatar.jpg" alt="">
+          <ion-label>
+            <h2>Cristian Heleno</h2>
+            <p>Programador FullStack</p>
+          </ion-label>
+        </div>
 
-          <ion-item *ngFor="let label of labels" lines="none">
-            <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-            <ion-label>{{ label }}</ion-label>
+        <ion-list lines="none" class="menu-items">
+          <ion-item>
+            <ion-icon name="pie-chart-outline"></ion-icon> Analise de entregas
+          </ion-item>
+          <ion-item>
+            <ion-icon name="browsers-outline"></ion-icon> Minhas entregas
+          </ion-item>
+          <ion-item>
+            <ion-icon name="flash"></ion-icon> Entregas ativas
+          </ion-item>
+          <ion-item>
+            <ion-icon name="chatbubble-ellipses-outline"></ion-icon> Fale conosco
+          </ion-item>
+          <ion-item (click)="logout()">
+            <ion-icon name="exit-outline"></ion-icon> Logout
           </ion-item>
         </ion-list>
+
       </ion-content>
+
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>

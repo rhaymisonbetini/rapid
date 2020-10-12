@@ -1,0 +1,70 @@
+
+
+#header{
+    width: 600px;
+    height: 250px;
+    background: var(--ion-color-primary);
+    border-bottom-left-radius: 100px;
+    transform: rotate(-20deg);
+    margin-top: -100px
+}
+
+#logo{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 280px !important;
+    }
+
+    .email, .login{
+        margin-top: 40px;
+    }
+
+}
+
+
+
+ion-input {
+    background: transparent !important;
+    border-radius: 40px !important;
+    opacity: 1 !important;
+    --placeholder-color: #ffffff !important;
+    --placeholder-opacity: 1 !important;
+    --placeholder-font-weight:bold !important;
+    --color: #ffffff  !important;
+    font-weight: bold !important;
+}
+
+ion-item {
+    --background: transparent !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom: 2px solid white !important;
+}
+
+label {
+    font-size: 15px !important;
+    margin-left: 35px;
+}
+
+
+ion-button {
+    width: 70%;
+    color: white !important;
+    margin-top: 30px;
+    --border-radius: 20px;
+    --padding-top: 25px;
+    --padding-bottom: 25px;
+  }
+  
+  .loge{
+      color: #343434 !important;
+  }

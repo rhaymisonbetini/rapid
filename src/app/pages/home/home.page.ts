@@ -27,7 +27,10 @@ export class HomePage implements OnInit {
   private originMarker: Marker;
   public destination: any;
 
+  public findDelivery: Boolean = false;
   public selectedDelivery: Boolean = false;
+  public showDeliver: Boolean = false;
+  public cancel: Boolean = false;
 
   constructor(
     private platform: Platform,
@@ -151,22 +154,12 @@ export class HomePage implements OnInit {
         width: 3
       });
 
+      this.findDelivery = true;
+      this.removeOpacity()
       await this.map.moveCamera({ target: points });
       await this.map.panBy(0, 100);
 
-    })
 
-  }
-
-  async back() {
-    this.map.clear().then(() => {
-
-      this.destination = null;
-      this.search = ''
-      this.addOriginMarker();
-
-    }).catch(error => {
-      console.log(error)
     })
 
   }
@@ -208,16 +201,51 @@ export class HomePage implements OnInit {
         color: '#0000CD',
         width: 3
       });
+
       this.loading.dismiss();
+      this.showDeliver = true;
       await this.map.moveCamera({ target: points });
       this.map.panBy(0, 100);
-
     })
 
   }
 
   confirmDelivery() {
     this.selectedDelivery = true;
+    this.showDeliver = false;
+    this.cancel = true;
+  }
+
+  removeOpacity() {
+    document.getElementById('delivery').classList.add('remove-opacity');
+  }
+
+
+  async back() {
+    this.map.clear().then(() => {
+
+      this.destination = null;
+      this.search = ''
+      this.addOriginMarker();
+
+    }).catch(error => {
+      console.log(error)
+    })
+
+  }
+
+  async cancelDelivery() {
+    this.map.clear().then(() => {
+      this.cancel = false;
+      this.selectedDelivery = false;
+      this.findDelivery  = false;
+      this.destination = null;
+      this.search = ''
+      this.addOriginMarker();
+
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
 }
