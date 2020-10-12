@@ -1,8 +1,15 @@
 <ion-content>
 
   <div #map>
-    <ion-searchbar [(ngModel)]="search" (ionChange)="searchChange()" placeholder="Onde deseja entregar?">
+    <ion-searchbar [hidden]="destination || selectedDelivery" [(ngModel)]="search" (ionChange)="searchChange()"
+      placeholder="Onde deseja entregar?">
     </ion-searchbar>
+
+    <ion-button [hidden]="!destination || selectedDelivery" size="small" class="ion-margin-horizontal" (click)="back()">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      Voltar
+    </ion-button>
+
     <ion-list class="ion-margin-horizontal">
       <ion-item (click)="calRoutes(result)" *ngFor="let result of searchResults; index as i">
         {{result.description}}
@@ -10,4 +17,32 @@
     </ion-list>
   </div>
 
+
+  <div class="request ion-padding ion-text-center" [hidden]="!destination || selectedDelivery">
+    <h4 class="ion-no-margin">Rapid</h4>
+    <span>Sua melhor opção de entregas</span>
+
+    <ion-grid class="ion-margin-vertical">
+      <ion-row>
+        <ion-col size="4" (click)="getDelivery()">
+          <img src="../../../assets/3003700.svg">
+          <span class="category">Rapid X</span>
+          <span>R$12,00</span>
+        </ion-col>
+        <ion-col size="4" (click)="getDelivery()">
+          <img src="../../../assets/2197226.svg">
+          <span class="category">Rapid Select</span>
+          <span>R$17,50</span>
+        </ion-col>
+        <ion-col size="4" (click)="getDelivery()">
+          <img src="../../../assets/delivery-time.png">
+          <span class="category">Rapid Black</span>
+          <span>R$35,00</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button color="dark" expand="block" (click)="confirmDelivery()">
+      Confirmar Entrega
+    </ion-button>
+  </div>
 </ion-content>

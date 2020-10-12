@@ -27,6 +27,8 @@ export class HomePage implements OnInit {
   private originMarker: Marker;
   public destination: any;
 
+  public selectedDelivery: Boolean = false;
+
   constructor(
     private platform: Platform,
     private loadingController: LoadingController,
@@ -60,11 +62,8 @@ export class HomePage implements OnInit {
     this.map = GoogleMaps.create(this.mapElement, mapOptions);
 
     try {
-
       this.map.one(GoogleMapsEvent.MAP_READY);
-
       this.addOriginMarker();
-
     } catch (e) {
       console.log(e)
     }
@@ -104,7 +103,8 @@ export class HomePage implements OnInit {
       return
     } else {
       this.googleAutoComplete.getPlacePredictions({
-        input: this.search
+        input: this.search,
+        country: 'br',
       }, predictions => {
         this.ngZone.run(() => {
           this.searchResults = predictions
@@ -118,7 +118,7 @@ export class HomePage implements OnInit {
     this.destination = result;
 
     const info: any = await Geocoder.geocode({
-      address: this.destination.description
+      address: this.destination.description,
     })
 
     let markDestionation: Marker = this.map.addMarkerSync({
@@ -151,10 +151,73 @@ export class HomePage implements OnInit {
         width: 3
       });
 
-      this.map.moveCamera({target:points})
+      await this.map.moveCamera({ target: points });
+      await this.map.panBy(0, 100);
 
     })
 
+  }
+
+  async back() {
+    this.map.clear().then(() => {
+
+      this.destination = null;
+      this.search = ''
+      this.addOriginMarker();
+
+    }).catch(error => {
+      console.log(error)
+    })
+
+  }
+
+  async getDelivery() {
+    this.loading = await this.loadingController.create({ message: "Procurando entregador..." });
+    await this.loading.present();
+
+    let driver = 'Cobilândia, Vila Velha - ES, Brasil';
+    const info: any = await Geocoder.geocode({
+      address: driver
+    })
+
+    let markDeliveryOrigom: Marker = this.map.addMarkerSync({
+      title: "Entregador",
+      icon: '#00BFFF',
+      animation: GoogleMapsAnimation.DROP,
+      position: info[0].position
+    });
+
+    this.googleDireactionService.route({
+      origin: markDeliveryOrigom.getPosition(),
+      destination: this.originMarker.getPosition(),
+      travelMode: 'DRIVING'
+    }, async result => {
+
+      const points = new Array<ILatLng>();
+      const routes = result.routes[0].overview_path;
+
+      for (let i = 0; i < routes.length; i++) {
+        points[i] = {
+          lat: routes[i].lat(),
+          lng: routes[i].lng()
+        }
+      }
+
+      await this.map.addPolyline({
+        points: points,
+        color: '#0000CD',
+        width: 3
+      });
+      this.loading.dismiss();
+      await this.map.moveCamera({ target: points });
+      this.map.panBy(0, 100);
+
+    })
+
+  }
+
+  confirmDelivery() {
+    this.selectedDelivery = true;
   }
 
 }
