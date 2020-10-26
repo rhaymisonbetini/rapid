@@ -1,5 +1,4 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { async } from '@angular/core/testing';
 import { Environment, Geocoder, GoogleMap, GoogleMapOptions, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, ILatLng, Marker, MyLocation } from '@ionic-native/google-maps';
 import { LoadingController, Platform } from '@ionic/angular';
 
@@ -52,8 +51,8 @@ export class HomePage implements OnInit {
     await this.loading.present();
 
     Environment.setEnv({
-      'API_KEY_FOR_BROWSER_RELEASE': 'AIzaSyBv9qTvXg5ihjrkAsFL-WWhmSNrJGymiSw',
-      'API_KEY_FOR_BROWSER_DEBUG': 'AIzaSyBv9qTvXg5ihjrkAsFL-WWhmSNrJGymiSw'
+      'API_KEY_FOR_BROWSER_RELEASE': '',
+      'API_KEY_FOR_BROWSER_DEBUG': ''
     });
 
     const mapOptions: GoogleMapOptions = {
@@ -141,6 +140,8 @@ export class HomePage implements OnInit {
       const points = new Array<ILatLng>();
       const routes = result.routes[0].overview_path;
 
+ 
+
       for (let i = 0; i < routes.length; i++) {
         points[i] = {
           lat: routes[i].lat(),
@@ -148,17 +149,17 @@ export class HomePage implements OnInit {
         }
       }
 
-      await this.map.addPolyline({
+       this.map.addPolyline({
         points: points,
         color: '#FF4500',
         width: 3
       });
 
+      // this.map.panBy(0, 100);
+      this.map.moveCamera({ target: points,zoom: 18,
+        tilt: 30 });
       this.findDelivery = true;
       this.removeOpacity()
-      await this.map.moveCamera({ target: points });
-      await this.map.panBy(0, 100);
-
 
     })
 
@@ -189,6 +190,9 @@ export class HomePage implements OnInit {
       const points = new Array<ILatLng>();
       const routes = result.routes[0].overview_path;
 
+      this.loading.dismiss();
+      this.showDeliver = true;
+
       for (let i = 0; i < routes.length; i++) {
         points[i] = {
           lat: routes[i].lat(),
@@ -202,10 +206,8 @@ export class HomePage implements OnInit {
         width: 3
       });
 
-      this.loading.dismiss();
-      this.showDeliver = true;
-      await this.map.moveCamera({ target: points });
       this.map.panBy(0, 100);
+      await this.map.moveCamera({ target: points });
     })
 
   }
@@ -238,7 +240,7 @@ export class HomePage implements OnInit {
     this.map.clear().then(() => {
       this.cancel = false;
       this.selectedDelivery = false;
-      this.findDelivery  = false;
+      this.findDelivery = false;
       this.destination = null;
       this.search = ''
       this.addOriginMarker();

@@ -230,3 +230,9 @@
     --ion-card-background: #1e1e1e;
   }
 }
+
+.menu-content-open {
+  cursor: unset !important; 
+  touch-action: unset !important; 
+   pointer-events: unset !important; 
+}
