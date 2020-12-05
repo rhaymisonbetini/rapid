@@ -29,5 +29,5 @@
     ionic cordova build android
   ```
  
- ####Observaçes
+ #### Observaçes
    Você deve inserir as chaves do google maps api para poder consumir os dados de geolocalização.
